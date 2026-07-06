@@ -1,5 +1,7 @@
 //In here we connect database  and code logic 
-require("dotenv").config();
+ require("dotenv").config();
+ const bookModele = require("./models/book.model")
+ const userModele= require("./models/user.model")
  const {Sequelize,DataTypes,} = require("sequelize")
 // we also write the above like  this 
 //  const sequelize = require("sequelize");
@@ -16,7 +18,13 @@ sequelize.authenticate()
 })
 
 const db = {}
-db.sequelize = Sequelize
+db.Sequelize = Sequelize
 db.sequelize = sequelize
 
+db.books=bookModele(sequelize,DataTypes);
+db.users=userModele(sequelize,DataTypes);
+//migrate code  ho yo chai hai
+sequelize.sync({alter:false}).then(()=>{
+    console.log("Migrate vayou hai tw")
+})
 module.export =db
