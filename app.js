@@ -1,6 +1,8 @@
 const express = require("express")
+const { books } = require("./database/connection")
 const app = express()
 require("./database/connection")
+
 
 app.get("/", (req, res) => {
 
@@ -9,10 +11,18 @@ app.get("/", (req, res) => {
         name: "Hello Lalit You are doing well"
     })
 })
-app.post("/books", function (req, res) {
-    //logic to add book to database goes here...
+app.get("/books",async function (req, res) {
+   const datas= await books.findAll() // select * from books  
     res.json({
-        message: "Book added successfully"
+        message: "Book added successfully",
+        datas
+    })
+})
+app.post("/books",async function (req, res) {
+   const datas= await books.findAll() // select * from books  
+    res.json({
+        message: "Book added successfully",
+        datas
     })
 })
 
