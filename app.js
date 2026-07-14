@@ -2,6 +2,7 @@ const express = require("express")
 const { books } = require("./database/connection")
 const app = express()
 require("./database/connection")
+app.use(express.json())
 
 
 app.get("/", (req, res) => {
@@ -18,11 +19,19 @@ app.get("/books",async function (req, res) {
         datas
     })
 })
+// how to insert data in database through orm function 
 app.post("/books",async function (req, res) {
-   const datas= await books.findAll() // select * from books  
+console.log(req.body)
+ const {bookName, bookPrice,bookAuther,bookGenre}= req.body
+  await books.create({
+    bookName:bookName,
+    bookPrice:bookPrice,
+    bookAuther:bookAuther,
+    bookGenre:bookGenre
+ })
     res.json({
         message: "Book added successfully",
-        datas
+        
     })
 })
 
