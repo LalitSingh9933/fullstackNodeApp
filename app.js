@@ -12,27 +12,45 @@ app.get("/", (req, res) => {
         name: "Hello Lalit You are doing well"
     })
 })
-app.get("/books",async function (req, res) {
-   const datas= await books.findAll() // select * from books  
+app.get("/books", async function (req, res) {
+    const datas = await books.findAll() // select * from books  
     res.json({
         message: "Book added successfully",
         datas
     })
 })
 // how to insert data in database through orm function 
-app.post("/books",async function (req, res) {
-console.log(req.body)
- const {bookName, bookPrice,bookAuther,bookGenre}= req.body
-  await books.create({
-    bookName:bookName,
-    bookPrice:bookPrice,
-    bookAuther:bookAuther,
-    bookGenre:bookGenre
- })
-    res.json({
-        message: "Book added successfully",
-        
-    })
+app.post("/books", async function (req, res) {
+    try {
+        console.log(req.body);
+        const { bookName, bookPrice, bookAuther, bookGenre } = req.body;
+
+        //validation
+        if (!bookName?.trim() || !bookPrice || !bookAuther?.trim() ||!bookGenre?.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required "
+
+            });
+        }
+        await books.create({
+            bookName: bookName,
+            bookPrice: bookPrice,
+            bookAuther: bookAuther,
+            bookGenre: bookGenre
+        });
+        res.status(201).json({
+            success: true,
+            message: "Book added succeessfully"
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message
+        })
+    }
 })
 
 app.delete("/books/:id", function (req, res) {
@@ -44,11 +62,11 @@ app.delete("/books/:id", function (req, res) {
     )
 
 })
-app.patch("/books/:id",function(req,res){
+app.patch("/books/:id", function (req, res) {
     res.json({
-         message:" book  title update successfully"
+        message: " book  title update successfully"
     })
-   
+
 })
 
 app.listen(3000, () => {
