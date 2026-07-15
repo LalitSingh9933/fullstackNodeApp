@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const { books } = require("../database/connection");
 
 const fetchBooks = async function (req, res) {
@@ -10,10 +11,11 @@ const fetchBooks = async function (req, res) {
 const addBook =  async function (req, res) {
     try {
         console.log(req.body);
-        const { bookName, bookPrice, bookAuther, bookGenre } = req.body;
+        const body = req.body || {};
+        const { bookName, bookPrice, bookAuther, bookGenre } = body;
 
         //validation
-        if (!bookName?.trim() || !bookPrice || !bookAuther?.trim() ||!bookGenre?.trim()) {
+        if (!String(bookName || "").trim() || !bookPrice || !String(bookAuther || "").trim() || !String(bookGenre || "").trim()) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required "
@@ -39,15 +41,29 @@ const addBook =  async function (req, res) {
         })
     }
 }
-const deleteBook =  function (req, res) {
-
+const deleteBook =  async function (req, res) {
+const id = req.params.id 
+ await books.destory({
+    where: {
+        id
+    }
+})
     res.json({
         message: "book delete successfully"
     }
 
     )
 }
-const editBook = function (req, res) {
+const editBook =  async function (req, res) {
+   const id =  req.params.id
+   const body = req.body || {}
+   const {bookName,bookPrice,bookAuther,bookGenre} = body
+    await books.update({bookName: bookName, bookPrice:bookPrice, bookAuther:bookAuther, bookGenre:bookGenre},{
+    where :{
+        id
+    }
+   })
+    
     res.json({
         message: " book  title update successfully"
     })
