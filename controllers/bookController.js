@@ -53,4 +53,18 @@ const editBook = function (req, res) {
     })
 
 }
-module.exports ={fetchBooks,addBook,deleteBook,editBook}
+const singleFetchBook = async function(req,res){
+    //first capture what id is he/she sending
+    const id = req.params.id
+    const data = await books.findByPk(id) //finByPk always return object
+    // const datas = books.findAll({ // This is another way of fetching single data  it always return array
+    //     where: {
+    //         id : id
+    //     }
+    // })
+    res.json({
+        message: "Single Book fetched successfully",
+        data
+    })
+}
+module.exports ={fetchBooks,addBook,deleteBook,editBook,singleFetchBook}
