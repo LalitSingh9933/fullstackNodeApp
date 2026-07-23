@@ -43,7 +43,7 @@ const addBook =  async function (req, res) {
 }
 const deleteBook =  async function (req, res) {
 const id = req.params.id 
- await books.destory({
+ await books.destroy({
     where: {
         id
     }
